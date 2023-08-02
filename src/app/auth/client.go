@@ -22,7 +22,7 @@ type GetRequest struct {
 }
 
 func (c *Client) Get(ctx context.Context, request GetRequest) (*http.Response, error) {
-	fmt.Println("request to url")
+	fmt.Printf("get request to: %v\n", c.BaseURL)
 	url := fmt.Sprintf("%v%v", c.BaseURL, request.Path)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

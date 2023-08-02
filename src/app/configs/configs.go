@@ -16,6 +16,7 @@ type RedisConfig struct {
 }
 
 type Collector struct {
+	Concurrent  bool
 	Interval    int
 	SplitFactor int
 }

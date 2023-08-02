@@ -9,6 +9,7 @@ Redis:
   Pass:
 
 Collector:
+  Concurrent: false
   Interval: 30 # 0 means once at time, and 0 > means an interval in second
   SplitFactor: 30 # Be used in pagination to do collecting in concurrent
 

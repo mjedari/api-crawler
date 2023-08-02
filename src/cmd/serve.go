@@ -64,9 +64,9 @@ func serve(ctx context.Context) {
 
 	// initiate collector
 	collectingService := collector.NewCollector(authService.Client, wiring.Wiring.GetStorage(), wiring.Wiring.Configs.Collector)
-	collectingService.Start(ctx)
+	go collectingService.Start(ctx)
 
-	go runHttpServer(ctx)
+	runHttpServer(ctx)
 }
 
 func runHttpServer(ctx context.Context) {

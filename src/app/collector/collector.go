@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Collector struct {
@@ -73,12 +74,24 @@ func (c *Collector) ConcurrentFetchProducts(ctx context.Context, pagination Pagi
 	return output, nil
 }
 
+func (c *Collector) runBaseOnStrategy(ctx context.Context) {
+	if c.config.Concurrent {
+		c.runConcurrent(ctx)
+	} else {
+		c.run(ctx)
+	}
+}
+
 func (c *Collector) Start(ctx context.Context) {
 	switch c.config.Interval {
 	case 0:
-		c.run(ctx)
+		c.runBaseOnStrategy(ctx)
 	default:
-		c.runConcurrent(ctx)
+		ticker := time.NewTicker(time.Second * 10)
+		for {
+			<-ticker.C
+			c.runBaseOnStrategy(ctx)
+		}
 	}
 }
 
