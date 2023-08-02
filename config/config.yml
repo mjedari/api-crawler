@@ -1,0 +1,23 @@
+Server:
+  Host: localhost
+  Port: 8000
+
+Redis:
+  Host: localhost
+  Port: 6379
+  User:
+  Pass:
+
+Collector:
+  Interval: 30 # 0 means once at time, and 0 > means an interval in second
+  SplitFactor: 30 # Be used in pagination to do collecting in concurrent
+
+
+Credentials:
+  UserName: i.jedari@gmail.com
+  Password: 123456789
+
+RateLimiter:
+  Active: false
+  Rate: 10 # per period
+  Period: 1 # in minutes
