@@ -34,9 +34,14 @@ func (c *Collector) Start(ctx context.Context) {
 	default:
 		c.runBaseOnStrategy(ctx)
 		ticker := time.NewTicker(time.Second * time.Duration(c.config.Interval))
+		defer ticker.Stop()
 		for {
-			<-ticker.C
-			c.runBaseOnStrategy(ctx)
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				c.runBaseOnStrategy(ctx)
+			}
 		}
 	}
 }
@@ -120,6 +125,7 @@ func (c *Collector) run(ctx context.Context) {
 	productList.AddHash()
 
 	// todo: List is ready here to store in redis: productList
+	fmt.Printf("collected %v products\n", len(productList.List))
 
 	if storingErr := c.store(ctx, productList); storingErr != nil {
 		logrus.Error(err)
@@ -143,7 +149,6 @@ func (c *Collector) runConcurrent(ctx context.Context) {
 	var sensorOutputCh <-chan []byte
 
 	for _, query := range queryList {
-		fmt.Println("run query...")
 		sensorOutputCh, _ = c.ConcurrentFetchProducts(ctx, query)
 		sources = append(sources, sensorOutputCh)
 	}

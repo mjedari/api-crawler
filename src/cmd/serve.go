@@ -20,6 +20,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"time"
 )
 
 var serveCmd = &cobra.Command{
@@ -35,10 +36,10 @@ var serveCmd = &cobra.Command{
 		<-c
 		cancel()
 		fmt.Println()
-		//for i := 10; i > 0; i-- {
-		//	time.Sleep(time.Second * 1)
-		//	fmt.Printf("\033[2K\rShutting down ... : %d", i)
-		//}
+		for i := 5; i > 0; i-- {
+			time.Sleep(time.Second)
+			fmt.Printf("\033[2K\rShutting down ... : %d", i)
+		}
 
 		// Perform any necessary cleanup before exiting
 		fmt.Println("\nService exited successfully.")
@@ -54,7 +55,7 @@ func serve(ctx context.Context) {
 	initWiring(ctx)
 
 	// initiate auth and client
-	authService := auth.NewAuthService(wiring.Wiring.GetStorage(), wiring.Wiring.Configs.OriginRemote)
+	authService := auth.NewAuthService(wiring.Wiring.GetStorage(), wiring.Wiring.GetOriginRemote())
 
 	request := auth.NewLoginRequest()
 	err := authService.Login(ctx, request)
@@ -64,10 +65,10 @@ func serve(ctx context.Context) {
 
 	// initiate collector
 	collectingService := collector.NewCollector(authService.Client,
-		wiring.Wiring.GetStorage(), wiring.Wiring.Configs.Collector, wiring.Wiring.Configs.OriginRemote)
+		wiring.Wiring.GetStorage(), wiring.Wiring.GetCollector(), wiring.Wiring.GetOriginRemote())
 	go collectingService.Start(ctx)
 
-	runHttpServer(ctx)
+	go runHttpServer(ctx)
 }
 
 func runHttpServer(ctx context.Context) {

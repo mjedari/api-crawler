@@ -25,3 +25,7 @@ func (w *Wire) GetRateLimiter() *rate_limiter.RateLimiter {
 func (w *Wire) GetStorage() contracts.IStorage {
 	return w.Redis
 }
+
+func (w *Wire) GetCollector() configs.Collector {
+	return w.Configs.Collector
+}

@@ -24,7 +24,7 @@ func NewAuthService(storage contracts.IStorage, config configs.OriginRemote) *Au
 }
 
 func (s *AuthService) Login(ctx context.Context, request *LoginRequest) error {
-	//check if it is in cache use it instead
+	// todo: ctx
 	var authResponse AuthResponse
 
 	data := s.storage.Fetch(ctx, "credential")
@@ -48,7 +48,7 @@ func (s *AuthService) Login(ctx context.Context, request *LoginRequest) error {
 		Body:  requestBody,
 		Token: "",
 	}
-	res, err := s.Client.Post(context.Background(), newPostRequest)
+	res, err := s.Client.Post(ctx, newPostRequest)
 	if err != nil {
 		return err
 	}

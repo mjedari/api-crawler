@@ -16,3 +16,7 @@ func (w *Wire) GetServerConfig() string {
 func (w *Wire) GetRedisConfig() configs.RedisConfig {
 	return w.Configs.Redis
 }
+
+func (w *Wire) GetOriginRemote() configs.OriginRemote {
+	return w.Configs.OriginRemote
+}
