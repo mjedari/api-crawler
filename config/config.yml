@@ -1,10 +1,10 @@
 Server:
-  Host: localhost
-  Port: 8000
+  Host: localhost # for docker to use in mac put: 0.0.0.0
+  Port: 8080
 
 Redis:
-  Host: localhost
-  Port: 6379
+  Host: localhost # for docker to use in mac put: host.docker.internal
+  Port: 6379 # for docker use: 6380
   User:
   Pass:
 
@@ -22,3 +22,8 @@ RateLimiter:
   Active: false
   Rate: 10 # per period
   Period: 1 # in minutes
+
+OriginRemote:
+  BaseURL: "https://vgang.io/api/vgang-core/v1"
+  Products: "/retailers/products?search=shirt&sort=Latest&dont_show_out_of_stock=1"
+  Login: "/auth/login/retailer/vgang"

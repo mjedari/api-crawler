@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
-	"github.com/mjedari/vgang-project/src/domain/products"
+	"github.com/mjedari/vgang-project/domain/contracts"
+	"github.com/mjedari/vgang-project/domain/products"
 	"net/http"
 )
 

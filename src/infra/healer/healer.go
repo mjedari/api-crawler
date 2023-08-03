@@ -3,7 +3,7 @@ package healer
 import (
 	"context"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
+	"github.com/mjedari/vgang-project/domain/contracts"
 	"time"
 )
 

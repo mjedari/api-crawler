@@ -3,15 +3,15 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/app/auth"
-	"github.com/mjedari/vgang-project/src/app/collector"
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/app/router"
-	"github.com/mjedari/vgang-project/src/app/wiring"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
-	"github.com/mjedari/vgang-project/src/infra/healer"
-	"github.com/mjedari/vgang-project/src/infra/rate_limiter"
-	"github.com/mjedari/vgang-project/src/infra/storage"
+	"github.com/mjedari/vgang-project/app/auth"
+	"github.com/mjedari/vgang-project/app/collector"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/app/router"
+	"github.com/mjedari/vgang-project/app/wiring"
+	"github.com/mjedari/vgang-project/domain/contracts"
+	"github.com/mjedari/vgang-project/infra/healer"
+	"github.com/mjedari/vgang-project/infra/rate_limiter"
+	"github.com/mjedari/vgang-project/infra/storage"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"log"
@@ -54,7 +54,7 @@ func serve(ctx context.Context) {
 	initWiring(ctx)
 
 	// initiate auth and client
-	authService := auth.NewAuthService(wiring.Wiring.GetStorage())
+	authService := auth.NewAuthService(wiring.Wiring.GetStorage(), wiring.Wiring.Configs.OriginRemote)
 
 	request := auth.NewLoginRequest()
 	err := authService.Login(ctx, request)
@@ -63,7 +63,8 @@ func serve(ctx context.Context) {
 	}
 
 	// initiate collector
-	collectingService := collector.NewCollector(authService.Client, wiring.Wiring.GetStorage(), wiring.Wiring.Configs.Collector)
+	collectingService := collector.NewCollector(authService.Client,
+		wiring.Wiring.GetStorage(), wiring.Wiring.Configs.Collector, wiring.Wiring.Configs.OriginRemote)
 	go collectingService.Start(ctx)
 
 	runHttpServer(ctx)

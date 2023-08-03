@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/mjedari/vgang-project/src/app/configs"
+	"github.com/mjedari/vgang-project/app/configs"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

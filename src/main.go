@@ -1,6 +1,6 @@
 package main
 
-import "github.com/mjedari/vgang-project/src/cmd"
+import "github.com/mjedari/vgang-project/cmd"
 
 func main() {
 	cmd.Execute()

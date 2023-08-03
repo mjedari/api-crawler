@@ -3,7 +3,7 @@ package rate_limiter
 import (
 	"errors"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/app/configs"
+	"github.com/mjedari/vgang-project/app/configs"
 	"sync"
 	"time"
 )

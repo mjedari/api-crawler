@@ -4,28 +4,25 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/google/uuid"
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/domain/contracts"
+	"github.com/mjedari/vgang-project/infra/client"
 	"io"
+	"time"
 )
 
 type AuthService struct {
-	Client  *Client
+	Client  contracts.IHTTPClient
 	storage contracts.IStorage
 	Token   string
+	config  configs.OriginRemote
 }
 
-func NewAuthService(storage contracts.IStorage) *AuthService {
-	// todo: load from config
-	client := NewClient("https://vgang.io/api/vgang-core/v1")
-
-	return &AuthService{Client: client, storage: storage}
+func NewAuthService(storage contracts.IStorage, config configs.OriginRemote) *AuthService {
+	client := client.NewClient(config.BaseURL)
+	return &AuthService{storage: storage, Client: client, config: config}
 }
 
-func (s *AuthService) setToken(token string) {
-	s.Token = token
-	s.Client.Token = token
-}
 func (s *AuthService) Login(ctx context.Context, request *LoginRequest) error {
 	//check if it is in cache use it instead
 	var authResponse AuthResponse
@@ -46,8 +43,8 @@ func (s *AuthService) Login(ctx context.Context, request *LoginRequest) error {
 	if err != nil {
 		return err
 	}
-	newPostRequest := PostRequest{
-		Path:  "/auth/login/retailer/vgang",
+	newPostRequest := client.PostRequest{
+		Path:  s.config.Login,
 		Body:  requestBody,
 		Token: "",
 	}
@@ -62,12 +59,17 @@ func (s *AuthService) Login(ctx context.Context, request *LoginRequest) error {
 
 	s.setToken(authResponse.GetAccessToken())
 
-	err = s.storage.Store(ctx, "credential", string(body), 0)
+	err = s.storage.Store(ctx, "credential", string(body), time.Hour)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (s *AuthService) setToken(token string) {
+	s.Token = token
+	s.Client.SetToken(token)
 }
 
 type AccessTokens struct {

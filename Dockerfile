@@ -19,7 +19,7 @@ COPY ./config/config.yml ./config/config.yml
 RUN cd src && go build -o vgang-project
 
 # Expose port 8080 to the outside world
-EXPOSE 8000
+EXPOSE 8080
 
 # Run the executable
 WORKDIR /app/src

@@ -3,7 +3,7 @@ package products
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/app/configs"
+	"github.com/mjedari/vgang-project/app/configs"
 	"net"
 )
 

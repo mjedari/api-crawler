@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/app/auth"
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
-	"github.com/mjedari/vgang-project/src/domain/products"
-	"github.com/mjedari/vgang-project/src/infra/utils"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/domain/contracts"
+	"github.com/mjedari/vgang-project/domain/products"
+	"github.com/mjedari/vgang-project/infra/client"
+	"github.com/mjedari/vgang-project/infra/utils"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -17,19 +17,36 @@ import (
 )
 
 type Collector struct {
-	client  *auth.Client
+	client  contracts.IHTTPClient
 	storage contracts.IStorage
 	config  configs.Collector
+	remote  configs.OriginRemote
 }
 
-func NewCollector(client *auth.Client, storage contracts.IStorage, config configs.Collector) *Collector {
-	return &Collector{client: client, storage: storage, config: config}
+func NewCollector(client contracts.IHTTPClient, storage contracts.IStorage, config configs.Collector, remote configs.OriginRemote) *Collector {
+	return &Collector{client: client, storage: storage, config: config, remote: remote}
+}
+
+func (c *Collector) Start(ctx context.Context) {
+	switch c.config.Interval {
+	case 0:
+		c.runBaseOnStrategy(ctx)
+	default:
+		c.runBaseOnStrategy(ctx)
+		ticker := time.NewTicker(time.Second * time.Duration(c.config.Interval))
+		for {
+			<-ticker.C
+			c.runBaseOnStrategy(ctx)
+		}
+	}
 }
 
 func (c *Collector) FetchProducts(ctx context.Context, pagination PaginationQuery) (*products.ProductsResponse, error) {
-	path := fmt.Sprintf("%v%v", "/retailers/products?search=shirt&sort=Latest&dont_show_out_of_stock=1", pagination.toString())
+	path := fmt.Sprintf("%v%v", c.remote.Products, pagination.toString())
 
-	productsRequest := auth.GetRequest{Path: path}
+	productsRequest := client.GetRequest{Path: path}
+
+	// todo: use retry pattern
 	res, err := c.client.Get(ctx, productsRequest)
 	if err != nil {
 		return nil, err
@@ -51,10 +68,10 @@ func (c *Collector) FetchProducts(ctx context.Context, pagination PaginationQuer
 }
 
 func (c *Collector) ConcurrentFetchProducts(ctx context.Context, pagination PaginationQuery) (<-chan []byte, error) {
-	path := fmt.Sprintf("%v%v", "/retailers/products?search=shirt&sort=Latest&dont_show_out_of_stock=1", pagination.toString())
+	path := fmt.Sprintf("%v%v", c.remote.Products, pagination.toString())
 	output := make(chan []byte) // be careful fo close the channel
 
-	productsRequest := auth.GetRequest{Path: path}
+	productsRequest := client.GetRequest{Path: path}
 	res, err := c.client.Get(ctx, productsRequest)
 	if err != nil {
 		return nil, err
@@ -79,19 +96,6 @@ func (c *Collector) runBaseOnStrategy(ctx context.Context) {
 		c.runConcurrent(ctx)
 	} else {
 		c.run(ctx)
-	}
-}
-
-func (c *Collector) Start(ctx context.Context) {
-	switch c.config.Interval {
-	case 0:
-		c.runBaseOnStrategy(ctx)
-	default:
-		ticker := time.NewTicker(time.Second * 10)
-		for {
-			<-ticker.C
-			c.runBaseOnStrategy(ctx)
-		}
 	}
 }
 
@@ -192,7 +196,7 @@ func (c *Collector) getTotalProductsCount(ctx context.Context) (uint64, error) {
 
 	path := fmt.Sprintf("%v%v", "/retailers/products?search=shirt&sort=Latest&dont_show_out_of_stock=1", query.toString())
 
-	productsRequest := auth.GetRequest{Path: path}
+	productsRequest := client.GetRequest{Path: path}
 	res, err := c.client.Get(ctx, productsRequest)
 	if err != nil {
 		return 0, err

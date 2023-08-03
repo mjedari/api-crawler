@@ -1,29 +1,32 @@
-package auth
+package client
 
 import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/mjedari/vgang-project/domain/contracts"
 	"net/http"
 )
 
 type Client struct {
 	BaseURL string
 	Token   string
-	// todo: Headers
+	Headers Headers
 }
+type Headers []map[string]string
 
 func NewClient(baseURL string) *Client {
-	return &Client{BaseURL: baseURL}
+	headers := Headers{map[string]string{"Content-Type": "application/json"}}
+	return &Client{BaseURL: baseURL, Headers: headers}
 }
 
-type GetRequest struct {
-	Path string
+func (c *Client) SetToken(token string) {
+	c.Token = token
 }
 
-func (c *Client) Get(ctx context.Context, request GetRequest) (*http.Response, error) {
+func (c *Client) Get(ctx context.Context, request contracts.IRequest) (*http.Response, error) {
 	fmt.Printf("get request to: %v\n", c.BaseURL)
-	url := fmt.Sprintf("%v%v", c.BaseURL, request.Path)
+	url := fmt.Sprintf("%v%v", c.BaseURL, request.GetPath())
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -43,16 +46,9 @@ func (c *Client) Get(ctx context.Context, request GetRequest) (*http.Response, e
 	return response, nil
 }
 
-type PostRequest struct {
-	Path  string
-	Body  []byte
-	Token string
-	// todo: header
-}
-
-func (c *Client) Post(ctx context.Context, request PostRequest) (*http.Response, error) {
-	url := fmt.Sprintf("%v%v", c.BaseURL, request.Path)
-	req, err := http.NewRequest("POST", url, bytes.NewReader(request.Body))
+func (c *Client) Post(ctx context.Context, request contracts.IRequest) (*http.Response, error) {
+	url := fmt.Sprintf("%v%v", c.BaseURL, request.GetPath())
+	req, err := http.NewRequest("POST", url, bytes.NewReader(request.GetBody()))
 	if err != nil {
 		return nil, err
 	}
@@ -68,4 +64,8 @@ func (c *Client) Post(ctx context.Context, request PostRequest) (*http.Response,
 	}
 
 	return response, nil
+}
+
+func (c *Client) Delete(ctx context.Context, request contracts.IRequest) (*http.Response, error) {
+	return nil, nil
 }

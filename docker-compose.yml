@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  vgang-project:
+    container_name: vgang
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    networks:
+      - vgang-net
+
+  redis:
+    container_name: redis
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6380:6379"
+    networks:
+      - vgang-net
+
+networks:
+  vgang-net:
+    driver: bridge

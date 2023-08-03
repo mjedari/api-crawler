@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/app/wiring"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/app/wiring"
 	"log"
 	"net"
 	"net/http"

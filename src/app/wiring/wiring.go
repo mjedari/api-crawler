@@ -1,9 +1,9 @@
 package wiring
 
 import (
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/domain/contracts"
-	"github.com/mjedari/vgang-project/src/infra/rate_limiter"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/domain/contracts"
+	"github.com/mjedari/vgang-project/infra/rate_limiter"
 )
 
 var Wiring *Wire

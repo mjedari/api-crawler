@@ -32,10 +32,17 @@ type RateLimiter struct {
 	Period uint64
 }
 
+type OriginRemote struct {
+	Products string
+	Login    string
+	BaseURL  string
+}
+
 type Configuration struct {
-	Server      Server
-	Redis       RedisConfig
-	RateLimiter RateLimiter
-	Credentials Credentials
-	Collector   Collector
+	Server       Server
+	Redis        RedisConfig
+	RateLimiter  RateLimiter
+	Credentials  Credentials
+	Collector    Collector
+	OriginRemote OriginRemote
 }

@@ -15,7 +15,17 @@ func (i InMemory) Store(ctx context.Context, key, value string, timeToLive time.
 	panic("implement me")
 }
 
+func (i InMemory) BatchStore(ctx context.Context, data map[string]string, timeToLive time.Duration) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (i InMemory) Fetch(ctx context.Context, key string) []byte {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (i InMemory) FetchAll(ctx context.Context, pattern string) [][]byte {
 	//TODO implement me
 	panic("implement me")
 }

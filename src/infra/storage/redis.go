@@ -3,8 +3,8 @@ package storage
 import (
 	"context"
 	"fmt"
-	"github.com/mjedari/vgang-project/src/app/configs"
-	"github.com/mjedari/vgang-project/src/infra/utils"
+	"github.com/mjedari/vgang-project/app/configs"
+	"github.com/mjedari/vgang-project/infra/utils"
 	"github.com/redis/go-redis/v9"
 	"time"
 )

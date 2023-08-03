@@ -1,7 +1,7 @@
 package wiring
 
 import (
-	"github.com/mjedari/vgang-project/src/app/configs"
+	"github.com/mjedari/vgang-project/app/configs"
 	"net"
 )
 
