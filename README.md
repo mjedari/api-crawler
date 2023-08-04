@@ -166,7 +166,7 @@ Its functionality is obvious. It sets in the middle of all processes and check i
 
 ## Drawbacks
 
-I've tried to deliver new to high quality code. But still there are some drawback that due to the limited time I decided
+I've tried to deliver a high quality code. But still there are some drawback that due to the limited time I decided
 to put it off. One of them was not handling well the shut-downing process.
 Although the code base is fully testable, I didn't write **tests** for main components. This would be my next step to
 fully
