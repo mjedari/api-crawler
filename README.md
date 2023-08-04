@@ -1,5 +1,17 @@
 # VGANG Project
 
+<p>
+    <a href="https://redis.io/" target="_blank">
+        <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white">
+    </a>
+    <a href="https://redis.io/" target="_blank">
+        <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
+    </a>
+    <a href="https://docker.com/" target="_blank">
+        <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
+    </a>
+</p>
+
 ## Introduction
 
 The whole structure is based on clean architecture packaging is by technology approach. Although the preferable one is
@@ -156,5 +168,6 @@ Its functionality is obvious. It sets in the middle of all processes and check i
 
 I've tried to deliver new to high quality code. But still there are some drawback that due to the limited time I decided
 to put it off. One of them was not handling well the shut-downing process.
-Although the code base is fully testable, I didn't write **tests** for main components. This would be my next step to fully
+Although the code base is fully testable, I didn't write **tests** for main components. This would be my next step to
+fully
 complete the task.
